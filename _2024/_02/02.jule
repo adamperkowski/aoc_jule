@@ -1,0 +1,74 @@
+// aoc_jule  Copyright (C) 2024  Adam Perkowski
+// https://github.com/adamperkowski/aoc_jule
+// https://adventofcode.com/2024/day/2
+
+use "std/conv"
+use "std/math"
+use "std/os"
+use "std/strings"
+
+fn countSafe(input: []byte): int {
+	lines := strings::SplitAll(str(input), "\n")
+
+	let mut count: int = 0
+
+	for _, line_b in lines {
+		line := strings::SplitAll(str(line_b), " ")
+		let mut num: []int
+		for _, n in line {
+			num = append(num, conv::Atoi(n)!)
+		}
+
+		let mut initial: int
+		if num[0]-num[1] >= 0 {
+			initial = 1
+		} else {
+			initial = 0
+		}
+
+		let mut diffs: []int
+		let mut is_safe = true
+
+		for i, n in num {
+			if i == len(num)-1 {
+				break
+			}
+
+			diff := n - num[i+1]
+			let mut sign: int
+			if diff >= 0 {
+				sign = 1
+			} else {
+				sign = 0
+			}
+
+			if sign != initial {
+				is_safe = false
+				break
+			}
+
+			abs_diff := int(math::Abs(f64(diff)))
+			if abs_diff < 1 || abs_diff > 3 {
+				is_safe = false
+				break
+			}
+			diffs = append(diffs, abs_diff)
+		}
+
+		if is_safe && len(diffs) == len(num)-1 {
+			count++
+		}
+	}
+
+	ret count
+}
+
+fn Run() {
+	println("\n2024/02")
+
+	inputs := os::File.Read("_2024/_02/inputs.txt")!
+	result := countSafe(inputs)
+
+	print("safe reports: ")
+	println(result)
+}
