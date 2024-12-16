@@ -2,14 +2,11 @@
 // https://github.com/adamperkowski/aoc_jule
 // https://adventofcode.com/2024/day/1
 
+use "std/conv"
 use "std/math"
 use "std/os"
 use "std/slices"
 use "std/strings"
-
-cpp use "helper.hpp"
-
-cpp fn readIntegers(line: str, do_right: bool): int
 
 fn calculateMetrics(input: []byte): [2]int {
 	lines := strings::SplitAll(str(input), "\n")
@@ -18,9 +15,9 @@ fn calculateMetrics(input: []byte): [2]int {
 	let mut list_right: []int
 
 	for _, line_b in lines {
-		line := str(line_b)
-		list_left = append(list_left, cpp.readIntegers(line, false))
-		list_right = append(list_right, cpp.readIntegers(line, true))
+		line := strings::SplitAll(str(line_b), "   ")
+		list_left = append(list_left, conv::Atoi(line[0])!)
+		list_right = append(list_right, conv::Atoi(line[1])!)
 	}
 
 	slices::Sort(list_left)
