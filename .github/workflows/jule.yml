@@ -1,5 +1,12 @@
 name: Jule CI
-on: [push]
+on:
+  push:
+    paths:
+      - "*/*/**"
+  pull_request:
+    paths:
+      - "*/*/**"
+  workflow_dispatch:
 
 jobs:
   jule:
