@@ -2,8 +2,51 @@
 // https://github.com/adamperkowski/aoc_jule
 // https://adventofcode.com/2024/day/1
 
-fn calculateMetrics(input: str) {}
+use "std/math"
+use "std/os"
+use "std/slices"
+use "std/strings"
+
+cpp use "helper.hpp"
+
+cpp fn readIntegers(line: str, do_right: bool): int
+
+fn calculateMetrics(input: []byte): str {
+	lines := strings::SplitAll(str(input), "\n")
+
+	let mut list_left: []int
+	let mut list_right: []int
+
+	for _, line_b in lines {
+		line := str(line_b)
+		list_left = append(list_left, cpp.readIntegers(line, false))
+		list_right = append(list_right, cpp.readIntegers(line, true))
+	}
+
+	slices::Sort(list_left)
+	slices::Sort(list_right)
+
+	let mut total: int = 0
+
+	for i, l in list_left {
+		total += int(math::Abs(f64(l - list_right[i])))
+	}
+
+	print("total: ")
+	println(total)
+
+	ret ""
+}
 
 fn Run() {
-	println("Hello, world!")
+	inputs := os::File.Read("_2024/_01/inputs.txt")!
+	println(calculateMetrics(inputs))
+}
+
+fn sum(values: ...int): int {
+	let mut total: int = 0
+	for _, i in values {
+		total += i
+	}
+	ret total
 }
