@@ -1,0 +1,9 @@
+// aoc_jule  Copyright (C) 2024  Adam Perkowski
+// https://github.com/adamperkowski/aoc_jule
+// https://adventofcode.com/2024/day/1
+
+fn calculateMetrics(input: str) {}
+
+fn Run() {
+	println("Hello, world!")
+}
