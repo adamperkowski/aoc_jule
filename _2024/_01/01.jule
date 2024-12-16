@@ -11,7 +11,7 @@ cpp use "helper.hpp"
 
 cpp fn readIntegers(line: str, do_right: bool): int
 
-fn calculateMetrics(input: []byte): str {
+fn calculateMetrics(input: []byte): [2]int {
 	lines := strings::SplitAll(str(input), "\n")
 
 	let mut list_left: []int
@@ -32,15 +32,31 @@ fn calculateMetrics(input: []byte): str {
 		total += int(math::Abs(f64(l - list_right[i])))
 	}
 
-	print("total: ")
-	println(total)
+	let mut similarity: int = 0
 
-	ret ""
+	for _, l_num in list_left {
+		let mut count: int = 0
+		for _, r_num in list_right {
+			if l_num == r_num {
+				count++
+			}
+		}
+		similarity += l_num * count
+	}
+
+	ret [total, similarity]
 }
 
 fn Run() {
+	println("2024/01")
+
 	inputs := os::File.Read("_2024/_01/inputs.txt")!
-	println(calculateMetrics(inputs))
+	result := calculateMetrics(inputs)
+
+	print("total distance: ")
+	println(result[0])
+	print("similarity score: ")
+	println(result[1])
 }
 
 fn sum(values: ...int): int {
