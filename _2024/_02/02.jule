@@ -7,7 +7,41 @@ use "std/math"
 use "std/os"
 use "std/strings"
 
-fn countSafe(input: []byte): int {
+fn isSafe(num: []int): bool {
+	let mut initial = 0
+	if num[0]-num[1] >= 0 {
+		initial = 1
+	}
+
+	let mut diffs: []int
+
+	for i, n in num {
+		if i == len(num)-1 {
+			break
+		}
+
+		diff := n - num[i+1]
+
+		let mut sign = 0
+		if diff >= 0 {
+			sign = 1
+		}
+
+		if sign != initial {
+			ret false
+		}
+
+		abs_diff := int(math::Abs(f64(diff)))
+		if abs_diff < 1 || abs_diff > 3 {
+			ret false
+		}
+		diffs = append(diffs, abs_diff)
+	}
+
+	ret len(diffs) == len(num)-1
+}
+
+fn countSafe(input: []byte, max_unsafe: int): int {
 	lines := strings::SplitAll(str(input), "\n")
 
 	let mut count: int = 0
@@ -19,43 +53,7 @@ fn countSafe(input: []byte): int {
 			num = append(num, conv::Atoi(n)!)
 		}
 
-		let mut initial: int
-		if num[0]-num[1] >= 0 {
-			initial = 1
-		} else {
-			initial = 0
-		}
-
-		let mut diffs: []int
-		let mut is_safe = true
-
-		for i, n in num {
-			if i == len(num)-1 {
-				break
-			}
-
-			diff := n - num[i+1]
-			let mut sign: int
-			if diff >= 0 {
-				sign = 1
-			} else {
-				sign = 0
-			}
-
-			if sign != initial {
-				is_safe = false
-				break
-			}
-
-			abs_diff := int(math::Abs(f64(diff)))
-			if abs_diff < 1 || abs_diff > 3 {
-				is_safe = false
-				break
-			}
-			diffs = append(diffs, abs_diff)
-		}
-
-		if is_safe && len(diffs) == len(num)-1 {
+		if isSafe(num) {
 			count++
 		}
 	}
@@ -67,8 +65,12 @@ fn Run() {
 	println("\n2024/02")
 
 	inputs := os::File.Read("_2024/_02/inputs.txt")!
-	result := countSafe(inputs)
 
+	safe := countSafe(inputs, 0)
 	print("safe reports: ")
-	println(result)
+	println(safe)
+
+	safe_1 := countSafe(inputs, 1)
+	print("safe reports (max usafe level 1): ")
+	println(safe_1)
 }
