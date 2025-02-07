@@ -9,13 +9,13 @@ use "std/slices"
 use "std/strings"
 
 fn calculateMetrics(input: []byte): [2]int {
-	lines := strings::SplitAll(str(input), "\n")
+	lines := strings::Split(str(input), "\n")
 
 	let mut list_left: []int
 	let mut list_right: []int
 
 	for _, line_b in lines {
-		line := strings::SplitAll(str(line_b), "   ")
+		line := strings::Split(str(line_b), "   ")
 		list_left = append(list_left, conv::Atoi(line[0])!)
 		list_right = append(list_right, conv::Atoi(line[1])!)
 	}

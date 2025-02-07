@@ -42,12 +42,12 @@ fn isSafe(num: []int): bool {
 }
 
 fn countSafe(input: []byte, max_unsafe: int): int {
-	lines := strings::SplitAll(str(input), "\n")
+	lines := strings::Split(str(input), "\n")
 
 	let mut count: int = 0
 
 	for _, line_b in lines {
-		line := strings::SplitAll(str(line_b), " ")
+		line := strings::Split(str(line_b), " ")
 		let mut num: []int
 		for _, n in line {
 			num = append(num, conv::Atoi(n)!)
