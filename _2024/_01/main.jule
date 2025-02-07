@@ -1,0 +1,65 @@
+// aoc_jule  Copyright (C) 2024  Adam Perkowski
+// https://github.com/adamperkowski/aoc_jule
+// https://adventofcode.com/2024/day/1
+
+use "std/conv"
+use "std/math"
+use "std/os"
+use "std/slices"
+use "std/strings"
+
+fn calculateMetrics(input: []byte): [2]int {
+	lines := strings::SplitAll(str(input), "\n")
+
+	let mut list_left: []int
+	let mut list_right: []int
+
+	for _, line_b in lines {
+		line := strings::SplitAll(str(line_b), "   ")
+		list_left = append(list_left, conv::Atoi(line[0])!)
+		list_right = append(list_right, conv::Atoi(line[1])!)
+	}
+
+	slices::Sort(list_left)
+	slices::Sort(list_right)
+
+	let mut total: int = 0
+
+	for i, l in list_left {
+		total += int(math::Abs(f64(l - list_right[i])))
+	}
+
+	let mut similarity: int = 0
+
+	for _, l_num in list_left {
+		let mut count: int = 0
+		for _, r_num in list_right {
+			if l_num == r_num {
+				count++
+			}
+		}
+		similarity += l_num * count
+	}
+
+	ret [total, similarity]
+}
+
+fn main() {
+	println("2024/01")
+
+	inputs := os::File.Read("inputs.txt")!
+	result := calculateMetrics(inputs)
+
+	print("total distance: ")
+	println(result[0])
+	print("similarity score: ")
+	println(result[1])
+}
+
+fn sum(values: ...int): int {
+	let mut total: int = 0
+	for _, i in values {
+		total += i
+	}
+	ret total
+}
