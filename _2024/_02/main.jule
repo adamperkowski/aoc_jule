@@ -7,13 +7,15 @@ use "std/math"
 use "std/os"
 use "std/strings"
 
-fn isSafe(num: []int): bool {
+fn isSafeNoDampener(num: []int): bool {
+	if len(num) < 2 {
+		ret true
+	}
+
 	let mut initial = 0
 	if num[0]-num[1] >= 0 {
 		initial = 1
 	}
-
-	let mut diffs: []int
 
 	for i, n in num {
 		if i == len(num)-1 {
@@ -35,13 +37,34 @@ fn isSafe(num: []int): bool {
 		if abs_diff < 1 || abs_diff > 3 {
 			ret false
 		}
-		diffs = append(diffs, abs_diff)
 	}
 
-	ret len(diffs) == len(num)-1
+	ret true
 }
 
-fn countSafe(input: []byte, max_unsafe: int): int {
+fn isSafeDampener(num: []int): bool {
+	if isSafeNoDampener(num) {
+		ret true
+	}
+
+	for i, _ in num {
+		let mut temp_num: []int
+
+		for j, n in num {
+			if i != j {
+				temp_num = append(temp_num, n)
+			}
+		}
+
+		if isSafeNoDampener(temp_num) {
+			ret true
+		}
+	}
+
+	ret false
+}
+
+fn countSafe(input: []byte, useDampener: bool): int {
 	lines := strings::Split(str(input), "\n")
 
 	let mut count: int = 0
@@ -53,8 +76,14 @@ fn countSafe(input: []byte, max_unsafe: int): int {
 			num = append(num, conv::Atoi(n)!)
 		}
 
-		if isSafe(num) {
-			count++
+		if useDampener {
+			if isSafeDampener(num) {
+				count++
+			}
+		} else {
+			if isSafeNoDampener(num) {
+				count++
+			}
 		}
 	}
 
@@ -66,11 +95,11 @@ fn main() {
 
 	inputs := os::File.Read("inputs.txt")!
 
-	safe := countSafe(inputs, 0)
-	print("safe reports: ")
-	println(safe)
+	safe_part_one := countSafe(inputs, false)
+	print("safe reports (part one): ")
+	println(safe_part_one)
 
-	safe_1 := countSafe(inputs, 1)
-	print("safe reports (max usafe level 1): ")
-	println(safe_1)
+	safe_part_two := countSafe(inputs, true)
+	print("safe reports (part two): ")
+	println(safe_part_two)
 }
